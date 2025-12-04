@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'">
+  <title>键盘统计追踪器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>键盘统计追踪器</h1>
+    </header>
+
+    <div class="controls">
+      <!-- 统计周期选择器 -->
+      <div class="control-group">
+        <label for="period-select">统计周期:</label>
+        <select id="period-select">
+          <option value="day">日</option>
+          <option value="month">月</option>
+          <option value="year">年</option>
+        </select>
+      </div>
+
+      <!-- 日期选择器 -->
+      <div class="control-group">
+        <label for="date-picker">选择日期:</label>
+        <input type="date" id="date-picker">
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="control-group actions">
+        <button id="export-json-btn" class="btn btn-primary">导出 JSON</button>
+        <button id="export-csv-btn" class="btn btn-primary">导出 CSV</button>
+        <button id="reset-btn" class="btn btn-danger">重置数据</button>
+        <button id="restore-btn" class="btn btn-warning">恢复数据</button>
+      </div>
+    </div>
+
+    <!-- 加载指示器 -->
+    <div id="loading-indicator" class="loading-indicator hidden">
+      <div class="spinner"></div>
+      <span>加载中...</span>
+    </div>
+
+    <!-- 图表显示区域 -->
+    <div class="chart-section">
+      <div class="section-header">
+        <h2>统计图表</h2>
+        <button id="refresh-chart-btn" class="btn btn-secondary">刷新图表</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="stats-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- 数据表格显示区域 -->
+    <div class="table-section">
+      <h2>详细数据</h2>
+      <div class="stats-summary">
+        <div class="stat-item">
+          <span class="stat-label">总敲击次数:</span>
+          <span id="total-keystrokes" class="stat-value">0</span>
+        </div>
+        <div class="stat-item search-box">
+          <input type="text" id="key-search" placeholder="输入按键名称（如：A, Enter, Space）..." />
+          <button id="search-confirm-btn" class="btn btn-small btn-primary">确认</button>
+          <button id="search-reset-btn" class="btn btn-small btn-secondary">重置</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <table id="stats-table">
+          <thead>
+            <tr>
+              <th>按键</th>
+              <th>敲击次数</th>
+              <th>占比</th>
+            </tr>
+          </thead>
+          <tbody id="stats-table-body">
+            <!-- 数据将通过 JavaScript 动态填充 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Use require since nodeIntegration is enabled
+    const { UIController } = require('./UIController.js');
+    
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, initializing UI...');
+      const uiController = new UIController();
+      uiController.initialize();
+    });
+  </script>
+</body>
+</html>

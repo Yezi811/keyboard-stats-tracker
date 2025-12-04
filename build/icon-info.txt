@@ -1,0 +1,19 @@
+应用图标说明
+=============
+
+请将应用图标放在此文件夹中：
+
+Windows:
+- icon.ico (256x256 像素，.ico 格式)
+
+macOS:
+- icon.icns (512x512 像素，.icns 格式)
+
+Linux:
+- icon.png (512x512 像素，.png 格式)
+
+如果没有图标文件，electron-builder 会使用默认图标。
+
+你可以使用在线工具将 PNG 图片转换为所需格式：
+- https://www.icoconverter.com/ (PNG to ICO)
+- https://cloudconvert.com/png-to-icns (PNG to ICNS)
