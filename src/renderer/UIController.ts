@@ -56,8 +56,12 @@ export class UIController {
 
     // Always initialize to today's date (Fix for Bug #2)
     this.currentDate = new Date();
-    this.datePicker.valueAsDate = this.currentDate;
-    console.log('Initialized with today\'s date:', this.currentDate.toISOString());
+    // Set date picker value using local date string (YYYY-MM-DD format)
+    const year = this.currentDate.getFullYear();
+    const month = String(this.currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(this.currentDate.getDate()).padStart(2, '0');
+    this.datePicker.value = `${year}-${month}-${day}`;
+    console.log('Initialized with today\'s date:', this.currentDate.toISOString(), 'Local:', `${year}-${month}-${day}`);
 
     // Set up event listeners
     this.periodSelect.addEventListener('change', () => {
