@@ -54,8 +54,10 @@ export class UIController {
     this.searchConfirmBtn = document.getElementById('search-confirm-btn') as HTMLButtonElement;
     this.searchResetBtn = document.getElementById('search-reset-btn') as HTMLButtonElement;
 
-    // Set initial date picker value to today
+    // Always initialize to today's date (Fix for Bug #2)
+    this.currentDate = new Date();
     this.datePicker.valueAsDate = this.currentDate;
+    console.log('Initialized with today\'s date:', this.currentDate.toISOString());
 
     // Set up event listeners
     this.periodSelect.addEventListener('change', () => {

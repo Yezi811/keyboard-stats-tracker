@@ -38,6 +38,47 @@ if (!gotTheLock) {
 }
 
 /**
+ * Check if the application is running with administrator privileges
+ * This is important for monitoring keyboard input in all applications (Fix for Bug #3)
+ */
+function checkAdminPrivileges(): boolean {
+  if (process.platform === 'win32') {
+    try {
+      // Try to access a system directory that requires admin rights
+      const testPath = path.join(process.env.WINDIR || 'C:\\Windows', 'System32');
+      require('fs').accessSync(testPath, require('fs').constants.W_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return true; // Non-Windows platforms don't need this check
+}
+
+/**
+ * Show warning if not running as administrator
+ */
+async function showAdminWarning(): Promise<void> {
+  const result = await dialog.showMessageBox({
+    type: 'warning',
+    title: '权限提示',
+    message: '应用未以管理员身份运行',
+    detail: '为了能够监听所有应用程序（特别是游戏）的键盘输入，建议以管理员身份运行此应用。\n\n' +
+            '当前可能无法统计某些应用的按键。\n\n' +
+            '要以管理员身份运行，请：\n' +
+            '1. 右键点击应用图标\n' +
+            '2. 选择"以管理员身份运行"',
+    buttons: ['继续使用', '退出并重新启动'],
+    defaultId: 0,
+    cancelId: 0
+  });
+
+  if (result.response === 1) {
+    app.quit();
+  }
+}
+
+/**
  * Create the main application window
  */
 function createWindow(): void {
@@ -156,9 +197,13 @@ function createTray(): void {
       type: 'checkbox',
       checked: app.getLoginItemSettings().openAtLogin,
       click: (menuItem) => {
+        // Enhanced auto-start configuration for better reliability (Fix for Bug #1)
         app.setLoginItemSettings({
-          openAtLogin: menuItem.checked
+          openAtLogin: menuItem.checked,
+          path: process.execPath,
+          args: menuItem.checked ? ['--autostart'] : []
         });
+        console.log('Auto-start set to:', menuItem.checked);
       }
     },
     { type: 'separator' },
@@ -448,6 +493,15 @@ ipcMain.handle('restore-data', async (_event, backupPath: string) => {
 
 app.on('ready', async () => {
   try {
+    // Check for administrator privileges (Fix for Bug #3)
+    const isAdmin = checkAdminPrivileges();
+    console.log('Running as administrator:', isAdmin);
+    
+    if (!isAdmin) {
+      // Show warning but allow to continue
+      await showAdminWarning();
+    }
+
     // Set Content Security Policy
     const { session } = require('electron');
     session.defaultSession.webRequest.onHeadersReceived((details: any, callback: any) => {

@@ -71,6 +71,7 @@
         }
       ],
       "icon": "build/tray-icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
       "signAndEditExecutable": false,
       "verifyUpdateCodeSignature": false
     },
