@@ -89,8 +89,12 @@ export class KeystrokeRepository {
 
         for (const keystroke of keystrokes) {
           const date = new Date(keystroke.timestamp);
-          const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD in UTC
-          const hour = date.getUTCHours(); // Use UTC hours to match UTC date
+          // Use local time instead of UTC to match user's timezone
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const dateStr = `${year}-${month}-${day}`; // YYYY-MM-DD in local time
+          const hour = date.getHours(); // Use local hours to match local date
 
           stmt.run(
             keystroke.keyCode,

@@ -1,6 +1,6 @@
 {
   "name": "keyboard-stats-tracker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A cross-platform keyboard statistics tracker built with Electron",
   "main": "dist/main/main.js",
   "scripts": {
